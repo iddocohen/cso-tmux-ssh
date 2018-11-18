@@ -39,7 +39,7 @@ function tmux-send {
 
 
 if ! tmux list-sessions -F '#{session_name}' 2>&1 | grep --quiet ${session_name}; then
-  echo -n Password:
+  echo -n Remote ssh password for root:
   read -s password
   tmux start-server
   tmux new-session -d -s ${session_name} -n host
