@@ -7,14 +7,7 @@ sshopts="-o StrictHostKeyChecking=no"
 session_name="workstation"
 password=""
 
-vms=("centralmsvm" "centralinfravm" "centralk8mastervm" "canvm" "regional_sblb" "vrr")
-
-canvm=($(grep canvm /etc/hosts | awk '{print $1}'))
-centralinfravm=($(grep centralinfravm /etc/hosts | awk '{print $1}'))
-centralk8mastervm=($(grep centralk8mastervm /etc/hosts | awk '{print $1}'))
-centralmsvm=($(grep centralmsvm /etc/hosts | awk '{print $1}'))
-regional_sblb=($(grep regional-sblb /etc/hosts | awk '{print $1}'))
-vrr=($(grep vrr /etc/hosts | awk '{print $1}'))
+vms=("centralmsvm" "centralinfravm" "centralk8mastervm" "canvm" "regional-sblb" "vrr")
 
 function expect-func {
     echo "
@@ -56,7 +49,7 @@ if ! tmux list-sessions -F '#{session_name}' 2>&1 | grep --quiet ${session_name}
   fi
   wnum=1
   for v in "${vms[@]}"; do
-     arr=${!v}
+     arr=($(grep $v /etc/hosts | awk '{print $1}'))
      [[ ${#arr[@]} -ge 0 ]] && for i in "${arr[@]}"; do tmux-send $v $i $wnum; wnum=$((wnum+1)); done
   done
   tmux select-window -t ${session_name}:0
